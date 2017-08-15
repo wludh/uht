@@ -9,11 +9,11 @@
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 	<div class="container">
 		<div class="card">
-			<div class="card-block">
+			<div class="card-body">
 				<header class="text-center">
 					<h1 class="card-title"><?php the_title(); ?></h1>
 				</header><!-- .entry-header -->
-
+				<div class="card">
 					<?php
 
 					$image = get_field('image');
@@ -33,14 +33,15 @@
 			$height = $image['sizes'][ $size . '-height' ];?>
 
 
-				<img src="<?php echo $url; ?>" alt="<?php echo $alt; ?>" class="size-large" />
+				<img src="<?php echo esc_url($url); ?>" alt="<?php echo esc_html($alt); ?>" class="size-large" />
 
 			<?php if( $caption ): ?>
-
-					<p class="wp-caption-text"><?php echo $caption; ?></p>
+				<div class="card-body"
+					<p class="wp-caption-text"><?php echo esc_html($caption); ?></p>
+				</div>
 
 			<?php endif; ?>
-
+		</div>
 			<?php if( get_field('copyright_statement')): ?>
 				<p class="cc">
 					<?php esc_html(the_field('copyright_statement')); ?>
@@ -51,7 +52,7 @@
 
 		<?php if( get_field('pull_quote')): ?>
 			<blockquote class="blockquote">
-					<p class="card-text"><?php esc_html(the_field('pull_quote')); ?></p>
+					<p><?php esc_html(the_field('pull_quote')); ?></p>
 			</blockquote>
 		<?php endif; ?>
 

@@ -9,7 +9,7 @@
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 	<div class="container">
 		<div class="card">
-			<div class="card-block">
+			<div class="card-body">
 				<header class="text-center">
 					<h1 class="card-title"><?php the_title(); ?></h1>
 				</header><!-- .entry-header -->
@@ -17,7 +17,7 @@
 		<?php $pageID = get_the_ID();?>
 		<?php if( get_field('pull_quote')): ?>
 			<blockquote class="blockquote">
-			<p class="card-text"><?php esc_html(the_field('pull_quote')); ?></p>
+			<p><?php esc_html(the_field('pull_quote')); ?></p>
 		</blockquote>
 		<?php endif; ?>
 		<p class="card-text">

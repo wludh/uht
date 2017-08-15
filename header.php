@@ -49,7 +49,7 @@
 
 		<!-- Brand and toggle get grouped for better mobile display -->
 
-		<nav class="navbar navbar-toggleable-md navbar-inverse navbar-fixed-top bg-inverse">
+		<nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-dark">
 			<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
     		<span class="navbar-toggler-icon"></span>
   		</button>

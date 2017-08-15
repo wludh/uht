@@ -240,7 +240,6 @@ function dynamic_content() {?>
 	  <div class="card-deck">
 	    <div class="col-sm-4">
 	      <div class="card">
-	        <div class="card-block">
 	          <?php
 	          if ( has_post_thumbnail($IDone)):?>
 	            <a href="<?php echo esc_url(get_permalink($IDone));?>">
@@ -300,13 +299,13 @@ function dynamic_content() {?>
 	                </div>
 	              </a>
 	          <?php endif;?>
-	        </div>
+
 	      </div>
 	    </div>
 
 	    <div class="col-sm-4">
 	      <div class="card">
-	        <div class="card-block">
+
 	          <?php
 	          if ( has_post_thumbnail($IDtwo)):?>
 	            <a href="<?php echo esc_url(get_permalink($IDtwo));?>">
@@ -364,13 +363,13 @@ function dynamic_content() {?>
 	                </div>
 	              </a>
 	          <?php endif;?>
-	        </div>
+
 	      </div>
 	    </div>
 
 	    <div class="col-sm-4">
 	      <div class="card">
-	        <div class="card-block">
+
 	          <?php
 	          if ( has_post_thumbnail($IDthree)):?>
 	            <a href="<?php echo esc_url(get_permalink($IDthree));?>">
@@ -428,7 +427,7 @@ function dynamic_content() {?>
 	                </div>
 	              </a>
 	          <?php endif;?>
-	        </div>
+
 	      </div>
 	    </div>
 	  </div>
@@ -454,7 +453,7 @@ function tag_buttons() {
 	if( !empty($tags) ):
 	foreach( $tags as $tag ):
 		$tag_link = get_tag_link($tag->term_id);?>
-		<a class="btn btn-secondary" href="<?php echo esc_url($tag_link);?>"><?php echo esc_html($tag->name);?></a>
+		<a class="btn btn-outline-secondary" href="<?php echo esc_url($tag_link);?>"><?php echo esc_html($tag->name);?></a>
 	<?php endforeach;
 endif;
 }

@@ -38,7 +38,6 @@ get_header(); ?>
 							endif; ?>
 							<div class="col-sm-4">
 								<div class="card">
-									<div class="card-block">
 										<?php
 
 										$cat_name = esc_html( $category->name);
@@ -105,7 +104,7 @@ get_header(); ?>
 
 						</div>
 					</div>
-				</div>
+
 				<?php
 				$i++;
 				if($i != 0 && $i % 3 == 0): ?>
@@ -136,7 +135,7 @@ get_header(); ?>
 							}?>
 							<div class="col-sm-4">
 								<div class="card">
-									<div class="card-block">
+
 										<?php
 
 										$name = get_the_title($post);
@@ -203,7 +202,7 @@ get_header(); ?>
 
 						</div>
 					</div>
-				</div>
+			
 				<?php
 				$i++;
 				if($i != 0 && $i % 3 == 0) { ?>

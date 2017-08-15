@@ -9,7 +9,7 @@
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
   <div class="container">
 		<div class="card">
-			<div class="card-block">
+			<div class="card-body">
         <header class="text-center">
 		        <h1 class="entry-title"><?php esc_html(the_title()); ?></h1>
 	      </header><!-- .entry-header -->
