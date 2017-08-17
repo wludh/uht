@@ -961,3 +961,15 @@ div.cardbox h4 {
 	text-align: right;
 	font-size: 12px;
 }
+.lede-right {
+	border-right: 10px solid #637E9C;
+}
+.lede-left {
+	border-left: 10px solid #637E9C;
+}
+.blue-border {
+	border-color: #637E9C;
+}
+.blue-text {
+	color: #637E9C;
+}
