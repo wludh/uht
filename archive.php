@@ -24,11 +24,14 @@ get_header(); ?>
 
 			<?php
 			$i = 0;
-			/* Start the Loop */
+			/* Start the Loop */?>
+			<div class="card-columns">
+				<?php
+
 			while ( have_posts() ) : the_post();
 			if($i % 3 == 0) {?>
 				<!--<div class="card-deck">-->
-					<div class="card-deck">
+					<!--<div class="card-deck">-->
 			<?php
 		}
 
@@ -38,7 +41,7 @@ get_header(); ?>
 				 * called content-___.php (where ___ is the Post Format name) and that will be used instead.
 				 */
 				get_template_part( 'template-parts/content', 'archive' );
-								$i++;
+								/*$i++;
 								if($i != 0 && $i % 3 == 0):
 									$open_div = 0;
 									?>
@@ -48,19 +51,21 @@ get_header(); ?>
 								<?php
 								else:
 									$open_div = 1;
-								endif;
+								endif;*/
 
 			endwhile;
 
-			if( $open_div == 1):?>
+
+		/*	if( $open_div == 1):?>
 		</div><!--/.card-deck-->
 		<div class="clearfix"></div>
 		<br>
-	<?php endif;
+	<?php endif;*/
 
-		 the_posts_navigation();
+		 the_posts_navigation();?>
+	 </div>
 
-		else :
+		<?php else :
 
 			get_template_part( 'template-parts/content', 'none' );
 
