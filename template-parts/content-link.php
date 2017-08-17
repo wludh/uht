@@ -16,9 +16,11 @@
 
 		<?php $pageID = get_the_ID();?>
 		<?php if( get_field('pull_quote')): ?>
-			<blockquote class="blockquote">
+			<div class="lede-left">
+			<blockquote class="blockquote text-secondary">
 			<p><?php esc_html(the_field('pull_quote')); ?></p>
 		</blockquote>
+	</div>
 		<?php endif; ?>
 		<p class="card-text">
 			<?php esc_html(the_field('annotation'));?>

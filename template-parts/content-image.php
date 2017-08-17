@@ -36,8 +36,8 @@
 				<img src="<?php echo esc_url($url); ?>" alt="<?php echo esc_html($alt); ?>" class="size-large" />
 
 			<?php if( $caption ): ?>
-				<div class="card-body"
-					<p class="wp-caption-text"><?php echo esc_html($caption); ?></p>
+				<div class="card-body">
+					<p class="wp-caption-text text-center"><?php echo esc_html($caption); ?></p>
 				</div>
 
 			<?php endif; ?>
@@ -51,9 +51,11 @@
 		<?php endif; ?>
 
 		<?php if( get_field('pull_quote')): ?>
-			<blockquote class="blockquote">
+			<div class="lede-left">
+			<blockquote class="blockquote text-secondary">
 					<p><?php esc_html(the_field('pull_quote')); ?></p>
 			</blockquote>
+		</div>
 		<?php endif; ?>
 
 		<?php if( get_field('image_creator') && get_field('source') && get_field('source_url')): ?>

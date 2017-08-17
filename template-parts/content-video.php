@@ -24,9 +24,11 @@
     <?php endif; ?>
 
 		<?php if( get_field('pull_quote')): ?>
-      <blockquote class="blockquote">
+      <div class="lede-left">
+      <blockquote class="blockquote text-secondary">
         <p><?php esc_html(the_field('pull_quote')); ?></p>
       </blockquote>
+    </div>
 		<?php endif; ?>
 		<?php if( get_field('display_text')): ?>
 			<p class="card-text">
