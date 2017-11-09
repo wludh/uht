@@ -973,3 +973,14 @@ div.cardbox h4 {
 .blue-text {
 	color: #637E9C;
 }
+.blue-nav {
+	background-color: #637E9C;
+
+}
+.pull-quote {
+	border-left: 10px solid #637E9C;
+	margin-left: 50px;
+	padding-left: 10px;
+	font-size: 20px;
+	color: gray;
+}

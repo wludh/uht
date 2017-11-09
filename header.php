@@ -49,7 +49,7 @@
 
 		<!-- Brand and toggle get grouped for better mobile display -->
 
-		<nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-dark">
+		<nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-dark" style="background-color: #637E9C !important">
 			<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
     		<span class="navbar-toggler-icon"></span>
   		</button>
@@ -57,18 +57,18 @@
 
 			<div class="collapse navbar-collapse" id="navbar">
 				<ul class="navbar-nav">
-					<li class="nav-item">
+					<li class="nav-item active">
 						<a class="nav-link" href="http://understandinghumantrafficking.org/toolbox/?cat=16">Stories</a></li>
-					<li class="nav-item">
+					<li class="nav-item active">
 						<a class="nav-link" href="http://understandinghumantrafficking.org/toolbox/?cat=17">Questions</a>
 					</li>
-					<li class="nav-item">
+					<li class="nav-item active">
 						<a class="nav-link" href="http://understandinghumantrafficking.org/toolbox/">About</a>
 					</li>
-					<li class="nav-item">
+					<li class="nav-item active">
 						<a class="nav-link" href="http://understandinghumantrafficking.org/toolbox/glossary/">Glossary</a>
 					</li>
-					<li class="nav-item">
+					<li class="nav-item active">
 						<a class="nav-link" href="http://understandinghumantrafficking.org/toolbox/?cat=33">Blog</a>
 					</li>
 				</ul>
