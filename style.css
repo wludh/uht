@@ -50,11 +50,15 @@ html {
 	font-family: sans-serif;
 	-webkit-text-size-adjust: 100%;
 	-ms-text-size-adjust:     100%;
+	position: relative;
+	min-height: 100%;
 }
 
 body {
 	margin: 0;
-	background-color: #F5F5F5 !important;
+	background-color: #F5F5F5;
+	min-height: 100%;
+	margin-bottom: 60px;
 }
 
 article,
@@ -355,7 +359,7 @@ html {
 }
 
 body {
-	background: #fff; /* Fallback for when there is no custom background color defined. */
+	background-color: #F5F5F5; /* Fallback for when there is no custom background color defined. */
 }
 
 blockquote:before,
@@ -510,26 +514,28 @@ textarea {
 ## Links
 --------------------------------------------------------------*/
 a {
-	color: royalblue;
+	color: #85A2CE;
 }
 
 a:visited {
-	color: purple;
+	text-decoration-style: none;
+	color: #85A2CE;
 }
 
 a:hover,
 a:focus,
 a:active {
-	color: midnightblue;
+	color: #20AAA1;
 }
 
-a:focus {
+/*a:focus {
 	outline: thin dotted;
-}
+}*/
 
 a:hover,
+a:focus,
 a:active {
-	outline: 0;
+	text-decoration-style: none;
 }
 
 /*--------------------------------------------------------------
@@ -983,4 +989,31 @@ div.cardbox h4 {
 	padding-left: 10px;
 	font-size: 20px;
 	color: gray;
+}
+
+/* Custom styling for the categories in "Stories" */
+
+body.category-miriam {
+	background-color: black;
+}
+
+/*.category-miriam a:visited, a:link {
+	color: white;
+}
+
+.category-miriam a:hover {
+	color: black;
+}*/
+.black-background-link a:hover {
+	color: gray !important;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  line-height: 60px; /* Vertically center the text there */
+  background-color: #f5f5f5;
 }

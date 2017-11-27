@@ -15,7 +15,7 @@
 
 	<footer id="colophon" class="footer" style="background-color:white;">
 		<div class="container">
-			<span>Footer content</span>
+			<span>Copyright 2017</span>
 
 		</div><!-- .site-info -->
 	</footer><!-- #colophon -->

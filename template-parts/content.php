@@ -23,6 +23,25 @@
 
 	<div class="entry-content">
 		<?php
+
+
+		if( get_field('story_embed_code')): ?>
+		<div class="embed-responsive embed-responsive-16by9">
+			<?php esc_url(the_field('story_embed_code')); ?>
+		</div>
+			<?php if( get_field('story_copyright')): ?>
+				<p class="cc">
+					<?php esc_html(the_field('story_copyright')); ?>
+				</p>
+			<?php endif; ?>
+			<?php if( get_field('story_transcript')): ?>
+				<details><!--Requires HTML5. Would it be better to use JavaScript?-->
+					<summary class="cc">Click to view transcript</summary>
+					<p class="card-text"><?php esc_html(the_field('story_transcript')); ?></p>
+				</details>
+			<?php endif;
+		endif;
+
 			the_content( sprintf(
 				wp_kses(
 					/* translators: %s: Name of current post. Only visible to screen readers */
@@ -50,7 +69,7 @@
 
 				if ( $questions == 1):
 					$cat_ID = $category->cat_ID;
-					
+
 
 				endif;
 			endforeach;?>

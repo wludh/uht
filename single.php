@@ -68,16 +68,18 @@ get_header(); ?>
 			endif;
 
 		endwhile; // End of the loop.
-		tag_buttons();
+		tag_buttons(); // Displays buttons for the content tags
 		?>
+		<hr>
 		</main><!-- #main -->
 		<br>
 		<div class="container">
-			<?php dynamic_content();?>
+			<?php dynamic_content(); // Calls the function to display dynamic content
+			?>
 		</div>
 		<br>
 	</div><!-- #primary -->
 
 <?php
-get_sidebar();
+get_sidebar(); // Currently not in use
 get_footer();

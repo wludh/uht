@@ -14,7 +14,7 @@
 		        <h1 class="entry-title"><?php esc_html(the_title()); ?></h1>
 	      </header><!-- .entry-header -->
 
-        <div class="text-center">
+        <div class="embed-responsive embed-responsive-16by9">
           <?php esc_url(the_field('embed_code')); ?>
         </div>
     <?php if( get_field('copyright_statement')): ?>

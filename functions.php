@@ -116,6 +116,8 @@ add_action( 'widgets_init', 'uht_widgets_init' );
 /**
  * Enqueue scripts and styles.
  */
+
+
 function uht_scripts() {
 
 		wp_enqueue_style( 'bootstrap-css', get_template_directory_uri() . '/bootstrap/css/bootstrap.min.css');
@@ -125,6 +127,8 @@ function uht_scripts() {
 	wp_enqueue_script( 'uht-navigation', get_template_directory_uri() . '/js/navigation.js', array(), '20151215', true );
 
 	wp_enqueue_script( 'uht-skip-link-focus-fix', get_template_directory_uri() . '/js/skip-link-focus-fix.js', array(), '20151215', true );
+
+	wp_enqueue_script( 'pooper_js', 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js');
 
 	wp_enqueue_script('bootstrap-js', get_template_directory_uri() . '/bootstrap/js/bootstrap.min.js');
 
@@ -193,13 +197,13 @@ function dynamic_content() {?>
 	<div class="container">
 
 	<?php global $post;
-	$tag_ids = wp_get_post_tags( $post->ID, array( 'fields' => 'ids' ) );
+	$tag_ids = wp_get_post_tags( $post->ID, array( 'fields' => 'ids' ) ); //Get the tag ids for all tags in the post
 
 	if( !empty($tag_ids)):
 
 	$pageID = get_the_ID();
 
-	$postarray = array();
+	$postarray = array(); //Set up array for storing all the posts with all the tags
 
 	foreach($tag_ids as $tag_id):
 	  $args = array(
@@ -212,16 +216,17 @@ function dynamic_content() {?>
 	    'posts_per_page' => -1); //get all posts
 
 	    $newposts = get_posts($args); //get all posts with the_tags
-	    foreach ($newposts as $post):
+	    foreach ($newposts as $post): //push post data for each post in the tags to the array
 	      setup_postdata($post);
 	      $postidarray[] = get_the_ID();
 	    endforeach;
 	  endforeach;
-	  $postiduniq = array_unique($postidarray);
-	  shuffle($postiduniq);
+	  $postiduniq = array_unique($postidarray); //remove any duplicate posts
+	  shuffle($postiduniq); //shuffle the array to give the appearance of randomness
 
+		//set up variables for the first three posts in the array
 		$IDone = $postiduniq[0];
-	  if ($IDone == $pageID):
+	  if ($IDone == $pageID): //check to make sure the post id isn't the same as the post currently being displayed
 	    $IDone = $postiduniq[3];
 	  endif;
 	  $IDtwo = $postiduniq[1];
@@ -235,12 +240,29 @@ function dynamic_content() {?>
 	  $titleone = get_the_title($IDone);
 	  $titletwo = get_the_title($IDtwo);
 	  $titlethree = get_the_title($IDthree);
+
+		//retrieve the category for each post and store the category ID in a variable (there should only be a single category for a given post)
+		$catsone = get_the_category($IDone);
+		foreach ($catsone as $catone):
+			$catoneID = $catone->term_id;
+		endforeach;
+		$catstwo = get_the_category($IDtwo);
+		foreach ($catstwo as $cattwo):
+			$cattwoID = $cattwo->term_id;
+		endforeach;
+		$catsthree = get_the_category($IDthree);
+		foreach ($catsthree as $catthree):
+			$catthreeID = $catthree->term_id;
+		endforeach;
+
+
 	  ?>
 
 	  <div class="card-deck">
 	    <div class="col-sm-4">
 
 	          <?php
+						//Check for a featured thumbnail for the individual post first
 	          if ( has_post_thumbnail($IDone)):?>
 	            <a href="<?php echo esc_url(get_permalink($IDone));?>">
 								 <div class="card">
@@ -263,7 +285,7 @@ function dynamic_content() {?>
 							</div>
 	            </a>
 	            <?php
-
+							//next check for a pull quote for the individual post
 							elseif (get_field('pull_quote', $IDone)): ?>
 							<a href="<?php echo esc_url(get_permalink($IDone));?>">
 								<div class="card blue-border mb-3">
@@ -278,7 +300,49 @@ function dynamic_content() {?>
 							</div>
 							</a>
 							<?php
-	            else:
+
+							//then check for a default image for the post's category
+							elseif (get_field('category_image', 'category_' . $catoneID)):
+
+							$catimageone = get_field('category_image', 'category_' . $catoneID);
+
+							// vars
+							$url = $catimageone['url'];
+							$title = $catimageone['title'];
+							$alt = $catimageone['alt'];
+							$caption = $catimageone['caption'];
+
+							// thumbnail
+							$size = 'thumbnail';
+							$thumb = $catimageone['sizes'][ $size ];
+							$width = $catimageone['sizes'][ $size . '-width' ];
+							$height = $catimageone['sizes'][ $size . '-height' ];
+
+							?>
+
+								<a href="<?php echo esc_url(get_permalink($IDone));?>">
+									 <div class="card">
+	                <img class="card-image size-thumbnail" src="<?php echo esc_url($url);?>" alt="<?php echo esc_html__($alt); ?>">
+	                <div class="card-img-overlay">
+	                  <div class="cardbox">
+	                    <h4 class="block-title"><?php echo sprintf( esc_html__($titleone));?></h4>
+	                    <?php/* if( get_field('pull_quote', $IDone)):
+												$quote = get_field('pull_quote', $IDone);
+												$quote_length = strlen ( $quote );
+												if( $quote_length < 75 ):
+												?>
+	                      <blockquote class="block-quote">
+	                        <p ><?php esc_html(the_field('pull_quote', $IDone));?></p>
+	                      </blockquote>
+	                    <?php endif;
+										endif;*/?>
+									</div>
+								</div>
+							</div>
+						</a>
+
+						<?php
+					else: //if no featured image, pull quote or category image, display default image
 
 							$cat_ID = get_cat_ID('Uncategorized');
 							$image = get_field('category_image', 'category_' . $cat_ID);
@@ -362,6 +426,48 @@ function dynamic_content() {?>
 								</div>
 							</div>
 							</a>
+
+							<?php
+							//then check for a default image for the post's category
+							elseif (get_field('category_image', 'category_' . $cattwoID)):
+
+							$catimagetwo = get_field('category_image', 'category_' . $cattwoID);
+
+							// vars
+							$url = $catimagetwo['url'];
+							$title = $catimagetwo['title'];
+							$alt = $catimagetwo['alt'];
+							$caption = $catimagetwo['caption'];
+
+							// thumbnail
+							$size = 'thumbnail';
+							$thumb = $catimagetwo['sizes'][ $size ];
+							$width = $catimagetwo['sizes'][ $size . '-width' ];
+							$height = $catimagetwo['sizes'][ $size . '-height' ];
+
+							?>
+
+								<a href="<?php echo esc_url(get_permalink($IDtwo));?>">
+									 <div class="card">
+	                <img class="card-image size-thumbnail" src="<?php echo esc_url($url);?>" alt="<?php echo esc_html__($alt); ?>">
+	                <div class="card-img-overlay">
+	                  <div class="cardbox">
+	                    <h4 class="block-title"><?php echo sprintf( esc_html__($titletwo));?></h4>
+	                    <?php/* if( get_field('pull_quote', $IDone)):
+												$quote = get_field('pull_quote', $IDone);
+												$quote_length = strlen ( $quote );
+												if( $quote_length < 75 ):
+												?>
+	                      <blockquote class="block-quote">
+	                        <p ><?php esc_html(the_field('pull_quote', $IDone));?></p>
+	                      </blockquote>
+	                    <?php endif;
+										endif;*/?>
+									</div>
+								</div>
+							</div>
+						</a>
+
 							<?php
 	            else:
 
@@ -444,6 +550,48 @@ function dynamic_content() {?>
 							</div>
 							</a>
 							<?php
+
+							//then check for a default image for the post's category
+							elseif (get_field('category_image', 'category_' . $catthreeID)):
+
+							$catimagethree = get_field('category_image', 'category_' . $catthreeID);
+
+							// vars
+							$url = $catimagethree['url'];
+							$title = $catimagethree['title'];
+							$alt = $catimagethree['alt'];
+							$caption = $catimagethree['caption'];
+
+							// thumbnail
+							$size = 'thumbnail';
+							$thumb = $catimagethree['sizes'][ $size ];
+							$width = $catimagethree['sizes'][ $size . '-width' ];
+							$height = $catimagethree['sizes'][ $size . '-height' ];
+
+							?>
+
+								<a href="<?php echo esc_url(get_permalink($IDthree));?>">
+									 <div class="card">
+	                <img class="card-image size-thumbnail" src="<?php echo esc_url($url);?>" alt="<?php echo esc_html__($alt); ?>">
+	                <div class="card-img-overlay">
+	                  <div class="cardbox">
+	                    <h4 class="block-title"><?php echo sprintf( esc_html__($titlethree));?></h4>
+	                    <?php/* if( get_field('pull_quote', $IDone)):
+												$quote = get_field('pull_quote', $IDone);
+												$quote_length = strlen ( $quote );
+												if( $quote_length < 75 ):
+												?>
+	                      <blockquote class="block-quote">
+	                        <p ><?php esc_html(the_field('pull_quote', $IDone));?></p>
+	                      </blockquote>
+	                    <?php endif;
+										endif;*/?>
+									</div>
+								</div>
+							</div>
+						</a>
+
+						<?php
 	            else:
 
 							$cat_ID = get_cat_ID('Uncategorized');
@@ -566,4 +714,36 @@ function previous_page_ID($id) {
 		$prev_page_id = $get_pages[$prev_key]->ID;
 	}
   	return $prev_page_id;
+}
+
+
+/* Get all tags in a category */
+
+function get_category_tags($args) {
+    global $wpdb;
+	$tags = $wpdb->get_results
+	("
+		SELECT DISTINCT terms2.term_id as tag_id, terms2.name as tag_name, null as tag_link
+		FROM
+			wp_posts as p1
+			LEFT JOIN wp_term_relationships as r1 ON p1.ID = r1.object_ID
+			LEFT JOIN wp_term_taxonomy as t1 ON r1.term_taxonomy_id = t1.term_taxonomy_id
+			LEFT JOIN wp_terms as terms1 ON t1.term_id = terms1.term_id,
+
+			wp_posts as p2
+			LEFT JOIN wp_term_relationships as r2 ON p2.ID = r2.object_ID
+			LEFT JOIN wp_term_taxonomy as t2 ON r2.term_taxonomy_id = t2.term_taxonomy_id
+			LEFT JOIN wp_terms as terms2 ON t2.term_id = terms2.term_id
+		WHERE
+			t1.taxonomy = 'category' AND p1.post_status = 'publish' AND terms1.term_id IN (".$args['categories'].") AND
+			t2.taxonomy = 'post_tag' AND p2.post_status = 'publish'
+			AND p1.ID = p2.ID
+		ORDER by tag_name
+	");
+	$count = 0;
+	foreach ($tags as $tag) {
+		$tags[$count]->tag_link = get_tag_link($tag->tag_id);
+		$count++;
+	}
+	return $tags;
 }
