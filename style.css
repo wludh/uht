@@ -906,12 +906,6 @@ object {
 /*--------------------------------------------------------------
 ## Custom CSS
 --------------------------------------------------------------*/
-/*Classes to add for styling:
-.block-title (supersedes card-title)
-.block-quote (pull quote for cards, supersedes card-text)
-.pull-quote (pull quotes in posts)
-.citation (citations)
-.copyright (copyright statements)*/
 
 .block-title {
 	display: block;
@@ -929,30 +923,11 @@ object {
 
 }
 
-/*.darken {
-	color: white;
-  background-image:
-    linear-gradient(
-      rgba(0, 0, 0, 0.5),
-      rgba(0, 0, 0, 0.5)
-    )
-}*/
-
 div.cardbox {
 	margin: 10%;
 	background-color: #ffffff;
 	opacity: 0.7;
 }
-
-/*div.cardbox p {
-	margin: 5%;
-	font-weight: bold;
-}
-
-div.cardbox h4 {
-	margin: 5%;
-	font-weight: bold;
-}*/
 
 .cite {
 	display: block;
@@ -993,19 +968,20 @@ div.cardbox h4 {
 
 /* Custom styling for the categories in "Stories" */
 
-body.category-miriam {
+body.category-miriam,
+body.category-carla,
+body.category-holly,
+body.category-lena,
+body.category-sonya,
+body.category-trudy {
 	background-color: black;
 }
 
-/*.category-miriam a:visited, a:link {
-	color: white;
+a.black-background-link:link {
+	color: #ccc;
 }
-
-.category-miriam a:hover {
-	color: black;
-}*/
-.black-background-link a:hover {
-	color: gray !important;
+a.black-background-link:visited {
+	color: #ccc;
 }
 
 .footer {
@@ -1016,4 +992,76 @@ body.category-miriam {
   height: 60px;
   line-height: 60px; /* Vertically center the text there */
   background-color: #f5f5f5;
+}
+
+/* Styling for embellished header */
+
+.embellish {
+	text-transform: uppercase;
+	border-style: solid none;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border-color: #ccc;
+}
+
+.gray-text {
+	color: #ccc;
+}
+
+.embellish-lower {
+	border-style: solid none;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border-color: #ccc;
+}
+
+.carousel-below {
+    margin-top: 15px;
+		margin-bottom: 30px;
+}
+
+
+/*Toggles between full site name or abbreviation depending on media width*/
+@media (max-width: 575px) {
+	a.fullBrand {
+		display: none;
+	}
+}
+
+@media (min-width: 576px) {
+	a.shortBrand {
+		display: none;
+	}
+}
+
+/*Sets card columns depending on media width*/
+@media (max-width: 575px) {
+	.card-columns {
+		column-count: 1;
+	}
+}
+
+@media (min-width: 576px) and (max-width: 991px) {
+	.card-columns {
+		column-count: 2;
+	}
+}
+
+@media (min-width: 992px) {
+	.card-columns {
+		column-count: 3;
+	}
+}
+
+/*Creates a class for smaller typography to be used at medium width*/
+@media (min-width: 768px) and (max-width: 1199px) {
+	.responsive-title {
+		font-size: 1.5rem;
+	}
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+	.responsive-title {
+		font-size: 1rem;
+	}
 }

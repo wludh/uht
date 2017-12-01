@@ -13,8 +13,14 @@
 	<div class="container">
 	<header class="page-header">
 		<?php
-		if ( is_singular() ) :
-			the_title( '<h1 class="page-header">', '</h1>' );
+		if ( is_singular() ) : ?>
+			<div class="container text-center">
+				<div class="d-inline-flex">
+			<?php
+			the_title( '<h1 class="page-header embellish-lower">', '</h1>' ); ?>
+		</div>
+	</div>
+		<?php
 		else :
 			the_title( '<h2 class="page-header"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h2>' );
 		endif;

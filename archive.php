@@ -15,25 +15,22 @@ get_header(); ?>
 		<?php
 		if ( have_posts() ) : ?>
 
-			<header class="text-center">
-				<?php
-					single_term_title( '<h1 class="page-title">', '</h1>' );
-					the_archive_description( '<div class="archive-description">', '</div>' );
-				?>
+			<header>
+				<div class="container text-center">
+					<div class="d-inline-flex">
+						<?php
+						single_term_title( '<h1 class="page-title display-4 embellish">', '</h1>' );
+						the_archive_description( '<div class="archive-description">', '</div>' );
+						?>
+					</div>
+				</div>
 			</header><!-- .page-header -->
 
-			<?php
-			$i = 0;
-			/* Start the Loop */?>
 			<div class="card-columns">
 				<?php
+				/* Start the Loop */
+				while ( have_posts() ) : the_post();
 
-			while ( have_posts() ) : the_post();
-			if($i % 3 == 0) {?>
-				<!--<div class="card-deck">-->
-					<!--<div class="card-deck">-->
-			<?php
-		}
 
 				/*
 				 * Include the Post-Format-specific template for the content.
@@ -41,29 +38,12 @@ get_header(); ?>
 				 * called content-___.php (where ___ is the Post Format name) and that will be used instead.
 				 */
 				get_template_part( 'template-parts/content', 'archive' );
-								/*$i++;
-								if($i != 0 && $i % 3 == 0):
-									$open_div = 0;
-									?>
-				        	</div><!--/.card-deck-->
-				        	<div class="clearfix"></div>
-									<br>
-								<?php
-								else:
-									$open_div = 1;
-								endif;*/
-
-			endwhile;
 
 
-		/*	if( $open_div == 1):?>
-		</div><!--/.card-deck-->
-		<div class="clearfix"></div>
-		<br>
-	<?php endif;*/
+				endwhile;
 
-		 the_posts_navigation();?>
-	 </div>
+		 	/*the_posts_navigation();*/?>
+	 		</div>
 
 		<?php else :
 

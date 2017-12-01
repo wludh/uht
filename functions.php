@@ -201,32 +201,33 @@ function dynamic_content() {?>
 
 	if( !empty($tag_ids)):
 
-	$pageID = get_the_ID();
+		$pageID = get_the_ID();
+		$postarray = array(); //Set up array for storing all the posts with all the tags
 
-	$postarray = array(); //Set up array for storing all the posts with all the tags
+		foreach($tag_ids as $tag_id):
+	  	$args = array(
+	    	'tag__in' => $tag_id, //must use tag id for this field
+	    	'post_type' => array(
+	      	'database_entry',
+	      	'glossary_entry',
+	      	'post'
+	    	),
+	    	'posts_per_page' => -1); //get all posts
 
-	foreach($tag_ids as $tag_id):
-	  $args = array(
-	    'tag__in' => $tag_id, //must use tag id for this field
-	    'post_type' => array(
-	      'database_entry',
-	      'glossary_entry',
-	      'post'
-	    ),
-	    'posts_per_page' => -1); //get all posts
-
-	    $newposts = get_posts($args); //get all posts with the_tags
-	    foreach ($newposts as $post): //push post data for each post in the tags to the array
-	      setup_postdata($post);
-	      $postidarray[] = get_the_ID();
-	    endforeach;
+	    	$newposts = get_posts($args); //get all posts with the_tags
+	    	foreach ($newposts as $post): //push post data for each post in the tags to the array
+	      	setup_postdata($post);
+	      	$postidarray[] = get_the_ID();
+	    	endforeach;
 	  endforeach;
-	  $postiduniq = array_unique($postidarray); //remove any duplicate posts
+
+		$postiduniq = array_unique($postidarray); //remove any duplicate posts
 	  shuffle($postiduniq); //shuffle the array to give the appearance of randomness
 
 		//set up variables for the first three posts in the array
 		$IDone = $postiduniq[0];
-	  if ($IDone == $pageID): //check to make sure the post id isn't the same as the post currently being displayed
+
+		if ($IDone == $pageID): //check to make sure the post id isn't the same as the post currently being displayed
 	    $IDone = $postiduniq[3];
 	  endif;
 	  $IDtwo = $postiduniq[1];
@@ -237,7 +238,8 @@ function dynamic_content() {?>
 	  if ($IDthree == $pageID):
 	    $IDthree = $postiduniq[3];
 	  endif;
-	  $titleone = get_the_title($IDone);
+
+		$titleone = get_the_title($IDone);
 	  $titletwo = get_the_title($IDtwo);
 	  $titlethree = get_the_title($IDthree);
 
@@ -258,301 +260,226 @@ function dynamic_content() {?>
 
 	  ?>
 
-	  <div class="card-deck">
-	    <div class="col-sm-4">
+	  	<div class="card-deck">
+	    	<div class="col-lg-4">
 
-	          <?php
-						//Check for a featured thumbnail for the individual post first
-	          if ( has_post_thumbnail($IDone)):?>
-	            <a href="<?php echo esc_url(get_permalink($IDone));?>">
-								 <div class="card">
+	      	<?php
+					//Check for a featured thumbnail for the individual post first
+	        if ( has_post_thumbnail($IDone)):?>
+	          <a href="<?php echo esc_url(get_permalink($IDone));?>">
+							<div class="card">
 	              <img class="card-image" src="<?php echo esc_url(get_the_post_thumbnail_url($IDone));?>">
 	              <div class="card-img-overlay">
 	                <div class="cardbox">
 	                  <h4 class="block-title"><?php echo sprintf( esc_html__($titleone));?></h4>
-										<?php/* if( get_field('pull_quote', $IDone)):
-											$quote = get_field('pull_quote', $IDone);
-											$quote_length = strlen ( $quote );
-											if( $quote_length < 75 ):
-											?>
-											<blockquote class="block-quote">
-												<p ><?php esc_url(the_field('pull_quote', $IDone));?></p>
-											</blockquote>
-										<?php endif;
-									endif;*/?>
 	                </div>
 	              </div>
 							</div>
-	            </a>
-	            <?php
-							//next check for a pull quote for the individual post
-							elseif (get_field('pull_quote', $IDone)): ?>
-							<a href="<?php echo esc_url(get_permalink($IDone));?>">
-								<div class="card blue-border mb-3">
-									<div class="card-body">
+	          </a>
+	        <?php
+					//next, check for a pull quote for the individual post
+					elseif (get_field('pull_quote', $IDone)): ?>
+						<a href="<?php echo esc_url(get_permalink($IDone));?>">
+							<div class="card blue-border mb-3">
+								<div class="card-body">
 									<h4 class="card-title text-center text-dark"><?php echo sprintf(esc_html($titleone));?></h4>
 									<div class="lede-right">
-									<blockquote class="blockquote text-right text-secondary mb-0">
-										<p><?php esc_html(the_field('pull_quote', $IDone));?></p>
-									</blockquote>
-								</div>
+										<blockquote class="blockquote text-right text-secondary mb-0">
+											<p><?php esc_html(the_field('pull_quote', $IDone));?></p>
+										</blockquote>
+									</div>
 								</div>
 							</div>
-							</a>
-							<?php
+						</a>
+					<?php
+					//then, check for a default image for the post's category
+					elseif (get_field('category_image', 'category_' . $catoneID)):
 
-							//then check for a default image for the post's category
-							elseif (get_field('category_image', 'category_' . $catoneID)):
+						$catimageone = get_field('category_image', 'category_' . $catoneID);
 
-							$catimageone = get_field('category_image', 'category_' . $catoneID);
+						// vars
+						$url = $catimageone['url'];
+						$title = $catimageone['title'];
+						$alt = $catimageone['alt'];
+						$caption = $catimageone['caption'];
 
-							// vars
-							$url = $catimageone['url'];
-							$title = $catimageone['title'];
-							$alt = $catimageone['alt'];
-							$caption = $catimageone['caption'];
+						// thumbnail
+						$size = 'thumbnail';
+						$thumb = $catimageone['sizes'][ $size ];
+						$width = $catimageone['sizes'][ $size . '-width' ];
+						$height = $catimageone['sizes'][ $size . '-height' ];
 
-							// thumbnail
-							$size = 'thumbnail';
-							$thumb = $catimageone['sizes'][ $size ];
-							$width = $catimageone['sizes'][ $size . '-width' ];
-							$height = $catimageone['sizes'][ $size . '-height' ];
+						?>
 
-							?>
-
-								<a href="<?php echo esc_url(get_permalink($IDone));?>">
-									 <div class="card">
-	                <img class="card-image size-thumbnail" src="<?php echo esc_url($url);?>" alt="<?php echo esc_html__($alt); ?>">
-	                <div class="card-img-overlay">
-	                  <div class="cardbox">
-	                    <h4 class="block-title"><?php echo sprintf( esc_html__($titleone));?></h4>
-	                    <?php/* if( get_field('pull_quote', $IDone)):
-												$quote = get_field('pull_quote', $IDone);
-												$quote_length = strlen ( $quote );
-												if( $quote_length < 75 ):
-												?>
-	                      <blockquote class="block-quote">
-	                        <p ><?php esc_html(the_field('pull_quote', $IDone));?></p>
-	                      </blockquote>
-	                    <?php endif;
-										endif;*/?>
+						<a href="<?php echo esc_url(get_permalink($IDone));?>">
+					 		<div class="card">
+	            	<img class="card-image size-thumbnail" src="<?php echo esc_url($url);?>" alt="<?php echo esc_html__($alt); ?>">
+	              <div class="card-img-overlay">
+	              	<div class="cardbox">
+	                	<h4 class="block-title"><?php echo sprintf( esc_html__($titleone));?></h4>
 									</div>
 								</div>
 							</div>
 						</a>
 
-						<?php
+					<?php
 					else: //if no featured image, pull quote or category image, display default image
 
-							$cat_ID = get_cat_ID('Uncategorized');
-							$image = get_field('category_image', 'category_' . $cat_ID);
+						$cat_ID = get_cat_ID('Uncategorized');
+						$image = get_field('category_image', 'category_' . $cat_ID);
 
-							// vars
-							$url = $image['url'];
-							$title = $image['title'];
-							$alt = $image['alt'];
-							$caption = $image['caption'];
+						// vars
+						$url = $image['url'];
+						$title = $image['title'];
+						$alt = $image['alt'];
+						$caption = $image['caption'];
 
-							// thumbnail
-							$size = 'thumbnail';
-							$thumb = $image['sizes'][ $size ];
-							$width = $image['sizes'][ $size . '-width' ];
-							$height = $image['sizes'][ $size . '-height' ];
+						// thumbnail
+						$size = 'thumbnail';
+						$thumb = $image['sizes'][ $size ];
+						$width = $image['sizes'][ $size . '-width' ];
+						$height = $image['sizes'][ $size . '-height' ];
 
-							?>
+						?>
 
-								<a href="<?php echo esc_url(get_permalink($IDone));?>">
-									 <div class="card">
-	                <img class="card-image size-thumbnail" src="<?php echo esc_url($url);?>" alt="<?php echo esc_html__($alt); ?>">
-	                <div class="card-img-overlay">
-	                  <div class="cardbox">
-	                    <h4 class="block-title"><?php echo sprintf( esc_html__($titleone));?></h4>
-	                    <?php/* if( get_field('pull_quote', $IDone)):
-												$quote = get_field('pull_quote', $IDone);
-												$quote_length = strlen ( $quote );
-												if( $quote_length < 75 ):
-												?>
-	                      <blockquote class="block-quote">
-	                        <p ><?php esc_html(the_field('pull_quote', $IDone));?></p>
-	                      </blockquote>
-	                    <?php endif;
-										endif;*/?>
-	                  </div>
-	                </div>
-								</div>
-	              </a>
-	          <?php endif;?>
-
-	      </div>
-
-
-	    <div class="col-sm-4">
-
-
-	          <?php
-	          if ( has_post_thumbnail($IDtwo)):?>
-	            <a href="<?php echo esc_url(get_permalink($IDtwo));?>">
-								<div class="card">
-	              <img class="card-image" src="<?php echo get_the_post_thumbnail_url($IDtwo);?>">
+						<a href="<?php echo esc_url(get_permalink($IDone));?>">
+							<div class="card">
+	            	<img class="card-image size-thumbnail" src="<?php echo esc_url($url);?>" alt="<?php echo esc_html__($alt); ?>">
 	              <div class="card-img-overlay">
-	                <div class="cardbox">
-	                  <h4 class="block-title"><?php echo sprintf( esc_html__($titletwo));?></h4>
-										<?php /*if( get_field('pull_quote', $IDtwo)):
-											$quote = get_field('pull_quote', $IDtwo);
-											$quote_length = strlen ( $quote );
-											if( $quote_length < 75 ):
-											?>
-											<blockquote class="block-quote">
-												<p ><?php the_field('pull_quote', $IDtwo);?></p>
-											</blockquote>
-										<?php endif;
-									endif;*/?>
+	              	<div class="cardbox">
+	                	<h4 class="block-title"><?php echo sprintf( esc_html__($titleone));?></h4>
 	                </div>
 	              </div>
 							</div>
-	            </a>
-	            <?php
+	          </a>
+	        <?php endif;?>
+	      </div>
 
-							elseif (get_field('pull_quote', $IDtwo)): ?>
-							<a href="<?php echo esc_url(get_permalink($IDtwo));?>">
-								<div class="card blue-border mb-3">
-									<div class="card-body">
-									<h4 class="card-title text-center text-dark"><?php echo sprintf(esc_html($titletwo));?></h4>
-									<div class="lede-right">
+	    	<div class="col-lg-4">
+
+	    	<?php
+	      if ( has_post_thumbnail($IDtwo)):?>
+	      	<a href="<?php echo esc_url(get_permalink($IDtwo));?>">
+						<div class="card">
+	          	<img class="card-image" src="<?php echo get_the_post_thumbnail_url($IDtwo);?>">
+	            <div class="card-img-overlay">
+	            	<div class="cardbox">
+	              	<h4 class="block-title"><?php echo sprintf( esc_html__($titletwo));?></h4>
+	              </div>
+	            </div>
+						</div>
+	        </a>
+	      <?php
+				elseif (get_field('pull_quote', $IDtwo)): ?>
+					<a href="<?php echo esc_url(get_permalink($IDtwo));?>">
+						<div class="card blue-border mb-3">
+							<div class="card-body">
+								<h4 class="card-title text-center text-dark"><?php echo sprintf(esc_html($titletwo));?></h4>
+								<div class="lede-right">
 									<blockquote class="blockquote text-right text-secondary mb-0">
 										<p><?php esc_html(the_field('pull_quote', $IDtwo));?></p>
 									</blockquote>
 								</div>
-								</div>
 							</div>
-							</a>
+						</div>
+					</a>
 
-							<?php
-							//then check for a default image for the post's category
-							elseif (get_field('category_image', 'category_' . $cattwoID)):
+					<?php
+					//then check for a default image for the post's category
+					elseif (get_field('category_image', 'category_' . $cattwoID)):
 
-							$catimagetwo = get_field('category_image', 'category_' . $cattwoID);
+						$catimagetwo = get_field('category_image', 'category_' . $cattwoID);
 
-							// vars
-							$url = $catimagetwo['url'];
-							$title = $catimagetwo['title'];
-							$alt = $catimagetwo['alt'];
-							$caption = $catimagetwo['caption'];
+						// vars
+						$url = $catimagetwo['url'];
+						$title = $catimagetwo['title'];
+						$alt = $catimagetwo['alt'];
+						$caption = $catimagetwo['caption'];
 
-							// thumbnail
-							$size = 'thumbnail';
-							$thumb = $catimagetwo['sizes'][ $size ];
-							$width = $catimagetwo['sizes'][ $size . '-width' ];
-							$height = $catimagetwo['sizes'][ $size . '-height' ];
+						// thumbnail
+						$size = 'thumbnail';
+						$thumb = $catimagetwo['sizes'][ $size ];
+						$width = $catimagetwo['sizes'][ $size . '-width' ];
+						$height = $catimagetwo['sizes'][ $size . '-height' ];
 
-							?>
+						?>
 
-								<a href="<?php echo esc_url(get_permalink($IDtwo));?>">
-									 <div class="card">
-	                <img class="card-image size-thumbnail" src="<?php echo esc_url($url);?>" alt="<?php echo esc_html__($alt); ?>">
-	                <div class="card-img-overlay">
-	                  <div class="cardbox">
-	                    <h4 class="block-title"><?php echo sprintf( esc_html__($titletwo));?></h4>
-	                    <?php/* if( get_field('pull_quote', $IDone)):
-												$quote = get_field('pull_quote', $IDone);
-												$quote_length = strlen ( $quote );
-												if( $quote_length < 75 ):
-												?>
-	                      <blockquote class="block-quote">
-	                        <p ><?php esc_html(the_field('pull_quote', $IDone));?></p>
-	                      </blockquote>
-	                    <?php endif;
-										endif;*/?>
+						<a href="<?php echo esc_url(get_permalink($IDtwo));?>">
+				 			<div class="card">
+	          		<img class="card-image size-thumbnail" src="<?php echo esc_url($url);?>" alt="<?php echo esc_html__($alt); ?>">
+	            	<div class="card-img-overlay">
+	            		<div class="cardbox">
+	              		<h4 class="block-title"><?php echo sprintf( esc_html__($titletwo));?></h4>
 									</div>
 								</div>
 							</div>
 						</a>
 
-							<?php
-	            else:
+					<?php
+	        else:
 
-							$cat_ID = get_cat_ID('Uncategorized');
-							$image = get_field('category_image', 'category_' . $cat_ID);
+						$cat_ID = get_cat_ID('Uncategorized');
+						$image = get_field('category_image', 'category_' . $cat_ID);
 
-							// vars
-							$url = $image['url'];
-							$title = $image['title'];
-							$alt = $image['alt'];
-							$caption = $image['caption'];
+						// vars
+						$url = $image['url'];
+						$title = $image['title'];
+						$alt = $image['alt'];
+						$caption = $image['caption'];
 
-							// thumbnail
-							$size = 'thumbnail';
-							$thumb = $image['sizes'][ $size ];
-							$width = $image['sizes'][ $size . '-width' ];
-							$height = $image['sizes'][ $size . '-height' ];?>
+						// thumbnail
+						$size = 'thumbnail';
+						$thumb = $image['sizes'][ $size ];
+						$width = $image['sizes'][ $size . '-width' ];
+						$height = $image['sizes'][ $size . '-height' ];?>
 
-	              <a href="<?php echo esc_url(get_permalink($IDtwo));?>">
-									<div class="card">
-	                <img class="card-image size-thumbnail" src="<?php echo esc_url($url);?>" alt="<?php echo esc_html__($alt); ?>">
-	                <div class="card-img-overlay">
-	                  <div class="cardbox">
-	                    <h4 class="block-title"><?php echo sprintf( esc_html__($titletwo));?></h4>
-											<?php /*if( get_field('pull_quote', $IDtwo)):
-											 $quote = get_field('pull_quote', $IDtwo);
-											 $quote_length = strlen ( $quote );
-											 if( $quote_length < 75 ):
-											 ?>
-											 <blockquote class="block-quote">
-												 <p ><?php the_field('pull_quote', $IDtwo);?></p>
-											 </blockquote>
-										 <?php endif;
-									 endif;*/?>
-	                  </div>
+	          <a href="<?php echo esc_url(get_permalink($IDtwo));?>">
+							<div class="card">
+	            	<img class="card-image size-thumbnail" src="<?php echo esc_url($url);?>" alt="<?php echo esc_html__($alt); ?>">
+	              <div class="card-img-overlay">
+	              	<div class="cardbox">
+	                	<h4 class="block-title"><?php echo sprintf( esc_html__($titletwo));?></h4>
 	                </div>
-								</div>
-	              </a>
-	          <?php endif;?>
+	              </div>
+							</div>
+	          </a>
+	        <?php endif;?>
 
-	    </div>
+	    		</div>
 
-	    <div class="col-sm-4">
+	    		<div class="col-lg-4">
 
 	          <?php
 	          if ( has_post_thumbnail($IDthree)):?>
 	            <a href="<?php echo esc_url(get_permalink($IDthree));?>">
 								<div class="card">
-	              <img class="card-image" src="<?php echo get_the_post_thumbnail_url($IDthree);?>">
-	              <div class="card-img-overlay">
-	                <div class="cardbox">
-	                  <h4 class="block-title"><?php echo sprintf( esc_html__($titlethree));?></h4>
-										<?php/* if( get_field('pull_quote', $IDthree)):
-											$quote = get_field('pull_quote', $IDthree);
-											$quote_length = strlen ( $quote );
-											if( $quote_length < 75 ):
-											?>
-											<blockquote class="block-quote">
-												<p ><?php the_field('pull_quote', $IDthree);?></p>
-											</blockquote>
-										<?php endif;
-									endif;*/?>
-	                </div>
-	              </div>
-							</div>
+	              	<img class="card-image" src="<?php echo get_the_post_thumbnail_url($IDthree);?>">
+	              	<div class="card-img-overlay">
+	                	<div class="cardbox">
+	                  	<h4 class="block-title"><?php echo sprintf( esc_html__($titlethree));?></h4>
+	                	</div>
+	              	</div>
+								</div>
 	            </a>
-	            <?php
+	          <?php
 
-							elseif (get_field('pull_quote', $IDthree)): ?>
+						elseif (get_field('pull_quote', $IDthree)): ?>
 							<a href="<?php echo esc_url(get_permalink($IDthree));?>">
 								<div class="card blue-border mb-3">
 									<div class="card-body">
-									<h4 class="card-title text-center text-dark"><?php echo sprintf(esc_html($titlethree));?></h4>
-									<div class="lede-right">
-									<blockquote class="blockquote text-right text-secondary mb-0">
-										<p><?php esc_html(the_field('pull_quote', $IDthree));?></p>
-									</blockquote>
+										<h4 class="card-title text-center text-dark"><?php echo sprintf(esc_html($titlethree));?></h4>
+										<div class="lede-right">
+											<blockquote class="blockquote text-right text-secondary mb-0">
+												<p><?php esc_html(the_field('pull_quote', $IDthree));?></p>
+											</blockquote>
+										</div>
+									</div>
 								</div>
-								</div>
-							</div>
 							</a>
-							<?php
+						<?php
 
-							//then check for a default image for the post's category
-							elseif (get_field('category_image', 'category_' . $catthreeID)):
+						//then check for a default image for the post's category
+						elseif (get_field('category_image', 'category_' . $catthreeID)):
 
 							$catimagethree = get_field('category_image', 'category_' . $catthreeID);
 
@@ -570,29 +497,19 @@ function dynamic_content() {?>
 
 							?>
 
-								<a href="<?php echo esc_url(get_permalink($IDthree));?>">
-									 <div class="card">
+							<a href="<?php echo esc_url(get_permalink($IDthree));?>">
+								<div class="card">
 	                <img class="card-image size-thumbnail" src="<?php echo esc_url($url);?>" alt="<?php echo esc_html__($alt); ?>">
 	                <div class="card-img-overlay">
 	                  <div class="cardbox">
 	                    <h4 class="block-title"><?php echo sprintf( esc_html__($titlethree));?></h4>
-	                    <?php/* if( get_field('pull_quote', $IDone)):
-												$quote = get_field('pull_quote', $IDone);
-												$quote_length = strlen ( $quote );
-												if( $quote_length < 75 ):
-												?>
-	                      <blockquote class="block-quote">
-	                        <p ><?php esc_html(the_field('pull_quote', $IDone));?></p>
-	                      </blockquote>
-	                    <?php endif;
-										endif;*/?>
+										</div>
 									</div>
 								</div>
-							</div>
-						</a>
+							</a>
 
 						<?php
-	            else:
+	          else:
 
 							$cat_ID = get_cat_ID('Uncategorized');
 							$image = get_field('category_image', 'category_' . $cat_ID);
@@ -609,28 +526,17 @@ function dynamic_content() {?>
 							$width = $image['sizes'][ $size . '-width' ];
 							$height = $image['sizes'][ $size . '-height' ];?>
 
-	              <a href="<?php echo esc_url(get_permalink($IDthree));?>">
-									<div class="card">
+	            <a href="<?php echo esc_url(get_permalink($IDthree));?>">
+								<div class="card">
 	                <img class="card-image size-thumbnail" src="<?php echo $url;?>" alt="<?php echo $alt; ?>">
 	                <div class="card-img-overlay">
 	                  <div class="cardbox">
 	                    <h4 class="block-title"><?php echo sprintf( esc_html__($titlethree));?></h4>
-											<?php /*if( get_field('pull_quote', $IDthree)):
-											 $quote = get_field('pull_quote', $IDthree);
-											 $quote_length = strlen ( $quote );
-											 if( $quote_length < 75 ):
-											 ?>
-											 <blockquote class="block-quote">
-												 <p ><?php the_field('pull_quote', $IDthree);?></p>
-											 </blockquote>
-										 <?php endif;
-									 endif;*/?>
 	                  </div>
 	                </div>
 								</div>
-	              </a>
+	            </a>
 	          <?php endif;?>
-
 
 	    </div>
 	  </div>
